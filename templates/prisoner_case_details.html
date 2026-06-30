@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Case Details</title>
+    <link rel="stylesheet" href="prisoner_case_details.css">
+</head>
+<body>
+    <div class="top-text">My Case Details</div>
+
+    <main>
+        <button id="view-case-button">View Your Case Details</button>
+
+        <div id="case-details">
+            <!-- Case details will be dynamically loaded here -->
+        </div>
+
+        <a href="home.html" class="back-button">Back</a>
+    </main>
+
+    <div class="bottom-text">&copy; 2024 Bail Reckoner. All rights reserved.</div>
+
+    <script>
+        // Fetch the logged-in user's role (assuming role is stored in localStorage)
+        const userRole = localStorage.getItem('userRole'); // 'prisoner' for prisoners
+
+        // Handle the "View Your Case Details" button click
+        document.getElementById('view-case-button').addEventListener('click', function() {
+            // Prompt the user for their Aadhar number
+            const aadharNumberInput = prompt("Please enter your Aadhar number:");
+
+            if (aadharNumberInput) {
+                // Call the backend to validate the Aadhar number
+                fetchCaseDetailsByAadhar(aadharNumberInput);
+            } else {
+                alert("Aadhar number is required to view your case details.");
+            }
+        });
+
+        // Function to fetch case details based on the Aadhar number entered
+        async function fetchCaseDetailsByAadhar(aadharNumber) {
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/validate-aadhar/${aadharNumber}?role=${userRole}`);
+
+                if (!response.ok) {
+                    throw new Error("Aadhar number doesn't match.");
+                }
+
+                const data = await response.json();
+                if (data.case_number) {
+                    displayCaseDetails(data);
+                } else {
+                    document.getElementById('case-details').innerHTML = '<p>No pending cases found for this Aadhar number.</p>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('case-details').innerHTML = '<p>Failed to load case details. Please try again later.</p>';
+            }
+        }
+
+        function displayCaseDetails(data) {
+            document.getElementById('case-details').innerHTML = `
+                <p><strong>Case Number:</strong> ${data.case_number}</p>
+                <p><strong>Charges:</strong> ${data.charges}</p>
+                <p><strong>Bail Status:</strong> ${data.bail_status}</p>
+                <p><strong>Court Hearing Date:</strong> ${data.court_hearing_date}</p>
+                <p><strong>Case Summary:</strong> ${data.case_summary}</p>
+                <p><strong>Suggestions:</strong> ${data.suggestions || 'No suggestions available'}</p>
+                <p><strong>Opinion:</strong> ${data.opinion || 'No opinion available'}</p>
+                <p><strong>Legal Aid Provider ID:</strong> ${data.legal_aid_provider_id || 'Not assigned'}</p> <!-- Default for ID -->
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historical Cases</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="historical_cases.css">
+</head>
+<body>
+    <header>
+        <h1>Historical Cases</h1>
+        <p>Search for completed cases based on the sections you were framed under.</p>
+    </header>
+    <main>
+        <form id="historical-cases-form">
+            <div class="form-group">
+                <label for="sections">Enter Sections (comma-separated)</label>
+                <input type="text" id="sections" name="sections" placeholder="e.g., IPC_302, IPC_307" required>
+                <i class="fas fa-search"></i>
+            </div>
+            <button type="button" id="search-cases-button">Search Cases</button>
+        </form>
+
+        <section id="cases-result" class="results">
+            <h2>Matching Historical Cases</h2>
+            <div id="cases-list"></div>
+        </section>
+    </main>
+    <script>
+        document.getElementById("search-cases-button").addEventListener("click", async () => {
+    const ipcInput = document.getElementById("sections").value;
+    const ipcArray = ipcInput.split(",").map(ipc => ipc.trim());
+
+    try {
+        const response = await fetch("http://127.0.0.1:8000/historical-cases", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ipcs: ipcArray }),
+        });
+
+        const result = await response.json();
+        console.log("Server Response:", result); // Log the server response
+
+        if (response.ok) {
+            const cases = result.matching_cases || []; // Extract the array safely
+            if (cases.length === 0) {
+                alert("No matching cases found.");
+                return;
+            }
+
+            const casesList = document.getElementById("cases-list");
+            casesList.innerHTML = "";
+
+            cases.forEach(caseItem => {
+                const caseDiv = document.createElement("div");
+                caseDiv.className = "case-item";
+                caseDiv.innerHTML = `
+                    <h3>Case Number: ${caseItem.case_number}</h3>
+                    <p><strong>Prisoner ID:</strong> ${caseItem.prisoner_id}</p>
+                    <p><strong>Aadhar Number:</strong> ${caseItem.aadhar_number}</p>
+                    <p><strong>Charges:</strong> ${caseItem.charges}</p>
+                    <p><strong>Judgement:</strong> ${caseItem.judgement}</p>
+                    <p><strong>Court Hearing Date:</strong> ${caseItem.court_hearing_date}</p>
+                `;
+                casesList.appendChild(caseDiv);
+            });
+        } else {
+            alert(result.message || "An error occurred.");
+        }
+    } catch (error) {
+        console.error("Error fetching historical cases:", error);
+        alert("An unexpected error occurred.");
+    }
+});
+
+
+    </script>
+</body>
+</html>

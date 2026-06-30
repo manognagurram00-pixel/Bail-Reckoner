@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Location Input</title>
+    <link rel="stylesheet" href="location.css">
+    <link rel="stylesheet" href="find_advocate.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Your Location</h1>
+        <p>Select how you want to provide your location:</p>
+
+        <!-- Location Selection Dropdown -->
+        <div class="form-group">
+            <label for="location-type">Location Input Type</label>
+            <div class="input-container">
+                <select id="location-type" name="location_type" onchange="showLocationField()" required>
+                    <option value="" disabled selected>Select Location Type</option>
+                    <option value="Live_Location">Live Location</option>
+                    <option value="Manual_Location">Manual Location</option>
+                    <option value="Predefined_Cities">Predefined Cities</option>
+                </select>
+                <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+            </div>
+        </div>
+
+        <!-- Live Location Field -->
+        <div id="live-location" class="location-field" style="display: none;">
+            <button type="button" onclick="getLiveLocation()">Get Live Location</button>
+            <div id="liveLocationDisplay" class="location-display">
+                <p>No location selected yet.</p>
+            </div>
+        </div>
+
+        <!-- Predefined Cities Field -->
+        <div id="predefined-location" class="location-field" style="display: none;">
+            <p>Select a city:</p>
+            <select id="predefinedCities" onchange="updateLocation('predefined')" required>
+                <option value="" disabled selected>Select City</option>
+                <option value="12.9716,77.5946">Bangalore</option>
+                <option value="28.7041,77.1025">Delhi</option>
+                <option value="19.0760,72.8777">Mumbai</option>
+                <option value="13.0827,80.2707">Chennai</option>
+                <option value="22.5726,88.3639">Kolkata</option>
+                <option value="26.9124,75.7873">Jaipur</option>
+                <option value="21.1702,72.8311">Surat</option>
+                <option value="23.0225,72.5714">Ahmedabad</option>
+                <option value="17.3850,78.4867">Hyderabad</option>
+                <option value="15.3173,75.7139">Hubli</option>
+            </select>
+            <div id="predefinedLocationDisplay" class="location-display">
+                <p>No city selected yet.</p>
+            </div>
+        </div>
+
+        <!-- Manual Location Field -->
+        <div id="manual-location" class="location-field" style="display: none;">
+            <p>Enter Latitude and Longitude:</p>
+            <input type="text" id="manualLocation" placeholder="Enter Latitude,Longitude" onblur="updateLocation('manual')" required>
+            <div id="manualLocationDisplay" class="location-display">
+                <p>No manual location entered yet.</p>
+            </div>
+        </div>
+
+        <!-- Additional Inputs -->
+        <div class="form-group">
+            <label for="max-advocate-fee">Maximum Advocate Fee (in INR)</label>
+            <div class="input-container">
+                <input type="number" id="max-advocate-fee" placeholder="Enter maximum advocate fee" required>
+                <i class="fas fa-money-bill-alt" aria-hidden="true"></i>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="min-experience">Minimum Experience (in years)</label>
+            <div class="input-container">
+                <input type="number" id="min-experience" placeholder="Enter minimum experience in years" required>
+                <i class="fas fa-clock" aria-hidden="true"></i>
+            </div>
+        </div>
+
+        <!-- Hidden Input for Final Location Data -->
+        <input type="hidden" id="finalLocationData" name="location">
+
+        <button type="button" onclick="findAdvocates()">Find Advocates</button>
+    </div>
+
+    <script>
+        // Show the corresponding location input field based on selection
+        function showLocationField() {
+            const selectedOption = document.getElementById("location-type").value;
+            const fields = document.querySelectorAll(".location-field");
+
+            // Hide all location fields
+            fields.forEach(field => (field.style.display = "none"));
+
+            // Reset the hidden input value
+            document.getElementById("finalLocationData").value = "";
+
+            // Show the selected field
+            if (selectedOption === "Live_Location") {
+                document.getElementById("live-location").style.display = "block";
+            } else if (selectedOption === "Predefined_Cities") {
+                document.getElementById("predefined-location").style.display = "block";
+            } else if (selectedOption === "Manual_Location") {
+                document.getElementById("manual-location").style.display = "block";
+            }
+        }
+
+        // Get live location using Geolocation API
+        function getLiveLocation() {
+            const liveLocationDisplay = document.getElementById("liveLocationDisplay");
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        const locationData = `${latitude},${longitude}`;
+                        document.getElementById("finalLocationData").value = locationData; // Set hidden input value
+                        liveLocationDisplay.innerHTML = `<p>Live Location: Latitude ${latitude}, Longitude ${longitude}</p>`;
+                    },
+                    (error) => {
+                        liveLocationDisplay.innerHTML = `<p>Error: ${error.message}</p>`;
+                    }
+                );
+            } else {
+                liveLocationDisplay.innerHTML = "<p>Geolocation is not supported by this browser.</p>";
+            }
+        }
+
+        // Update location data from predefined cities or manual input
+        function updateLocation(type) {
+            let locationData;
+            const locationDisplay =
+                type === "predefined"
+                    ? document.getElementById("predefinedLocationDisplay")
+                    : document.getElementById("manualLocationDisplay");
+
+            if (type === "predefined") {
+                const predefinedCities = document.getElementById("predefinedCities").value;
+                if (predefinedCities) {
+                    const [latitude, longitude] = predefinedCities.split(",");
+                    locationData = predefinedCities;
+                    locationDisplay.innerHTML = `<p>Selected City: Latitude ${latitude}, Longitude ${longitude}</p>`;
+                } else {
+                    locationDisplay.innerHTML = "<p>No city selected yet.</p>";
+                }
+            } else if (type === "manual") {
+                const manualLocation = document.getElementById("manualLocation").value.trim();
+                if (manualLocation) {
+                    const [latitude, longitude] = manualLocation.split(",");
+                    if (
+                        !isNaN(latitude) &&
+                        !isNaN(longitude) &&
+                        latitude >= -90 &&
+                        latitude <= 90 &&
+                        longitude >= -180 &&
+                        longitude <= 180
+                    ) {
+                        locationData = manualLocation;
+                        locationDisplay.innerHTML = `<p>Manual Location: Latitude ${latitude}, Longitude ${longitude}</p>`;
+                    } else {
+                        locationDisplay.innerHTML = "<p>Invalid latitude or longitude range.</p>";
+                    }
+                } else {
+                    locationDisplay.innerHTML = "<p>No manual location entered yet.</p>";
+                }
+            }
+
+            if (locationData) {
+                document.getElementById("finalLocationData").value = locationData; // Set hidden input value
+            }
+        }
+
+        // Placeholder function to handle advocate search
+        async function findAdvocates() {
+    const locationData = document.getElementById("finalLocationData").value;
+    const maxAdvocateFee = parseFloat(document.getElementById("max-advocate-fee").value);
+    const minExperience = parseInt(document.getElementById("min-experience").value);
+
+    if (!locationData) {
+        alert("Please provide a valid location.");
+        return;
+    }
+
+    const [latitude, longitude] = locationData.split(',').map(coord => parseFloat(coord));
+
+    if (isNaN(maxAdvocateFee) || maxAdvocateFee <= 0) {
+        alert("Please enter a valid maximum advocate fee.");
+        return;
+    }
+
+    if (isNaN(minExperience) || minExperience < 0) {
+        alert("Please enter a valid minimum experience.");
+        return;
+    }
+
+    try {
+        // Fetch nearest Legal Aid Providers
+        const response = await fetch('http://127.0.0.1:8000/get-nearest-providers', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ latitude, longitude, maxAdvocateFee, minExperience }),
+    });
+
+
+        const providers = await response.json();
+
+        if (response.ok) {
+            displayProviders(providers); // Call function to display providers
+        } else {
+            alert("Failed to fetch nearest providers. Please try again.");
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error fetching nearest providers.');
+    }
+}
+
+function displayProviders(providers) {
+    const resultsContainer = document.createElement('div');
+    resultsContainer.id = 'results-container';
+    resultsContainer.innerHTML = '<h2>Nearest Legal Aid Providers</h2>';
+    
+    if (providers.length === 0) {
+        resultsContainer.innerHTML += '<p>No providers found nearby.</p>';
+    } else {
+        const list = document.createElement('ul');
+        providers.forEach(provider => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                <strong>Name:</strong> ${provider.name}<br>
+                <strong>Designation:</strong> ${provider.designation}<br>
+                <strong>Email:</strong> ${provider.email}<br>
+                <strong>Contact:</strong> ${provider.contact_number}<br>
+                <strong>Experience:</strong> ${provider.experience} years<br>
+                <strong>Fee:</strong> ₹${provider.fee}<br>
+                <strong>Languages Known:</strong> ${provider.languages_known || "Not specified"}<br>
+                <strong>Distance:</strong> ${provider.distance} km
+            `;
+            list.appendChild(listItem);
+        });
+        resultsContainer.appendChild(list);
+    }
+
+    // Append results to the page
+    const existingResults = document.getElementById('results-container');
+    if (existingResults) {
+        existingResults.remove(); // Remove old results if present
+    }
+    document.body.appendChild(resultsContainer);
+}
+
+    </script>
+</body>
+</html>

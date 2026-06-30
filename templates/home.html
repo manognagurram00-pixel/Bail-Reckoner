@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Bail Reckoner</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="home.html">Bail Reckoner</a>
+        </div>
+        <nav class="navigation">
+            <a href="home.html">Home</a>
+            <a id="new-case-link">New Case</a>
+            <a href="drop_judgment.html">Add Completed Case</a>
+            <a id="action-link"></a>
+            <a href="about.html">About us</a>
+            <a id="find-advocate-button" href="find_advocate.html" style="display: none;" class="find-advocate">Find Advocate</a>
+            <a href="login.html">Logout</a>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <h1>Welcome to Bail Reckoner</h1>
+        <p class="quote">"Simplifying justice, streamlining freedom, empowering fairness"</p>
+        <div class="user-details">
+            <p><strong>Name:</strong> <span id="user-name"></span></p>
+            <p><strong>Role:</strong> <span id="user-role"></span></p>
+        </div>
+        <div class="buttons">
+            <button id="new-case-button">New Case</button>
+            <button id="action-button"></button>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 Bail Reckoner. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Fetch user details from localStorage
+        const userName = localStorage.getItem('userName');
+        const userRole = localStorage.getItem('userRole');
+
+        // Check if user details exist
+        if (userName && userRole) {
+            document.getElementById('user-name').textContent = userName;
+            document.getElementById('user-role').textContent = 
+                userRole === 'legal_aid' ? 'Legal Aid Provider' : 
+                userRole === 'judicial_authority' ? 'Judicial Authority' : 
+                'Undertrial Prisoner';
+        } else {
+            // Redirect to login if user details are missing
+            alert('Invalid session. Please log in again.');
+            window.location.href = 'login.html';
+        }
+
+        // Role-based navigation links and button behavior
+        const roleToPage = {
+            legal_aid: {
+                newCase: 'legal_aid_provider.html',
+                actionPage: 'take_up.html',
+                actionName: 'Take up a Case',
+                pendingCases: "take_up.html"
+            },
+            judicial_authority: {
+                newCase: 'judicial_authority.html',
+                actionPage: 'case_judge.html',
+                actionName: 'Give a Suggestion',
+                pendingOpinions: "case_judge.html"
+            },
+            prisoner: {
+                newCase: 'undertrial_prisoner.html', // Link for filing a new case (if applicable)
+                actionPage: 'prisoner_case_details.html', // Updated link to the new case details page
+                actionName: 'View Your Case Details', // Updated action name
+                findAdvocate: 'find_advocate.html' // Link for Find Advocate
+            }
+        };
+
+        const newCaseLink = document.getElementById('new-case-link');
+        const newCaseButton = document.getElementById('new-case-button');
+        const actionLink = document.getElementById('action-link');
+        const actionButton = document.getElementById('action-button');
+        const findAdvocateButton = document.getElementById('find-advocate-button');
+        const roleDetails = roleToPage[userRole];
+
+        if (roleDetails) {
+            // Set up New Case links
+            newCaseLink.href = roleDetails.newCase;
+            newCaseButton.addEventListener('click', () => {
+                location.href = roleDetails.newCase;
+            });
+
+            // Set up Action links and buttons
+            actionLink.textContent = roleDetails.actionName;
+            actionLink.href = roleDetails.actionPage;
+            actionButton.textContent = roleDetails.actionName;
+            actionButton.addEventListener('click', () => {
+                location.href = roleDetails.actionPage;
+            });
+
+            // Show Find Advocate button for prisoners
+            if (userRole === 'prisoner' && roleDetails.findAdvocate) {
+                findAdvocateButton.style.display = 'inline';
+            }
+
+            if (userRole === 'judicial_authority' && roleDetails.pendingOpinions) {
+                const pendingOpinionsLink = document.getElementById('pending-opinions-link');
+                pendingOpinionsLink.style.display = 'block';
+                pendingOpinionsLink.href = roleDetails.pendingOpinions;
+            }
+
+            if (userRole === "legal_aid" && roleDetails.pendingCases) {
+                const pendingCasesLink = document.getElementById("pending-cases-link");
+                pendingCasesLink.style.display = "block";
+                pendingCasesLink.href = roleDetails.pendingCases;
+            }
+
+            if (userRole === 'prisoner') {
+                const caseDetailsLink = document.getElementById('view-case-details-link');
+                caseDetailsLink.style.display = 'block';
+                caseDetailsLink.href = 'prisoner_case_details.html';
+            }
+        } else {
+            newCaseLink.style.display = 'none';
+            newCaseButton.style.display = 'none';
+            actionLink.style.display = 'none';
+            actionButton.style.display = 'none';
+            findAdvocateButton.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

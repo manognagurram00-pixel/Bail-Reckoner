@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Assessment</title>
+    <link rel="stylesheet" href="risk_assignment.css">
+</head>
+<body>
+                        <div class="form-container">
+                            <h1>Risk Assessment Form</h1>
+                            <form id="risk-assessment-form">
+                                <!-- Aadhar Number input for identifying the prisoner -->
+                                <div class="form-group">
+                                    <label for="aadhar_number">Aadhar Number:</label>
+                                    <input type="text" id="aadhar_number" name="aadhar_number" placeholder="Enter your 12-digit Aadhar number" pattern="\d{12}" maxlength="12" required>
+                                </div>
+                    
+                                <!-- Other form fields (Income, Social Ties, etc.) -->
+                                <div class="form-group">
+                                    <label for="income">Income (in Rupees):</label>
+                                    <input type="number" id="income" name="income" placeholder="Enter monthly income" required>
+                                </div>
+                    
+                                <div class="form-group">
+                                    <label for="social_ties">Social Ties:</label>
+                                    <select id="social_ties" name="social_ties" required>
+                                        <option value="" disabled selected>Select an option</option> <!-- default option -->
+                                        <option value="very_low">Very Low</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                        <option value="very_high">Very High</option>
+                                    </select>
+                                </div>                                
+                    
+                                <div class="form-group">
+                                    <label for="passport">Possession of Passport:</label>
+                                    <select id="passport" name="passport" required>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                    
+                                <div class="form-group">
+                                    <label for="financial_resources">Financial Resources:</label>
+                                    <select id="financial_resources" name="financial_resources" required>
+                                        <option value="minimum">Minimum</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                        <option value="very_high">Very High</option>
+                                    </select>
+                                </div>
+                    
+                                <div class="form-group">
+                                    <label for="travel_history_countries">Number of Foreign Countries Visited:</label>
+                                    <input type="number" id="travel_history_countries" name="travel_history_countries" placeholder="Enter count" required>
+                                </div>
+                    
+                                <div class="form-group">
+                                    <label for="job_type">Employment Type:</label>
+                                    <select id="job_type" name="job_type" required>
+                                        <option value="government">Government</option>
+                                        <option value="private">Private</option>
+                                        <option value="unemployed">Unemployed</option>
+                                    </select>
+                                </div>
+                    
+                                <div class="form-group">
+                                    <label for="job_role">Employment Role:</label>
+                                    <select id="job_role" name="job_role" required>
+                                        <option value="executive">Executive</option>
+                                        <option value="senior_management">Senior Management</option>
+                                        <option value="middle_management">Middle Management</option>
+                                        <option value="junior_staff">Junior Staff</option>
+                                        <option value="technical_staff">Technical Staff</option>
+                                        <option value="contractual_worker">Contractual Worker</option>
+                                        <option value="unemployed">Unemployed</option>
+                                    </select>
+                                </div>           
+                    
+                                <div class="form-group">
+                                    <label for="cooperate_legal_authorities">Cooperation with Legal Authorities (Rate out of 10):</label>
+                                    <input type="number" id="cooperate_legal_authorities" name="cooperate_legal_authorities" min="0" max="10" placeholder="Enter rating" required>
+                                </div>
+                    
+                                <div class="form-group">
+                                    <label for="police_opinion">Police Assessment of Behavior:</label>
+                                    <select id="police_opinion" name="police_opinion" required>
+                                        <option value="excellent">Excellent</option>
+                                        <option value="good">Good</option>
+                                        <option value="average">Average</option>
+                                        <option value="poor">Poor</option>
+                                        <option value="very_poor">Very Poor</option>
+                                    </select>
+                                </div>
+                    
+                                <div class="form-group">
+                                    <label for="strength_evidence">Strength of Evidence (Rate out of 10):</label>
+                                    <input type="number" id="strength_evidence" name="strength_evidence" min="0" max="10" placeholder="Enter rating" required>
+                                </div>
+                    
+                                <div class="form-group">
+                                    <label for="political_influence">Political Influence (Percentage):</label>
+                                    <input type="range" id="political_influence" name="political_influence" min="0" max="100" step="1" oninput="updatePoliticalInfluence(this.value)">
+                                    <span id="political_influence_value">50%</span>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="business_influence">Business Influence (Percentage):</label>
+                                    <input type="range" id="business_influence" name="business_influence" min="0" max="100" step="1" oninput="updateBusinessInfluence(this.value)">
+                                    <span id="business_influence_value">50%</span>
+                                </div>
+                    
+                                <div class="form-group">
+                                    <label for="neighbourhood_opinion">Neighborhood Opinion on Character (Rate out of 10):</label>
+                                    <input type="number" id="neighbourhood_opinion" name="neighbourhood_opinion" min="0" max="10" placeholder="Enter rating" required>
+                                </div>
+
+                                <!-- Dynamic display for ongoing and completed cases -->
+                                <button type="button" onclick="fetchAndDisplayAllCases()">Fetch All Cases</button>
+                            </div>
+                            <div id="case-display">
+                                <h2>Ongoing Cases</h2>
+                                <div id="ongoing-cases-container" class="cases-container"></div>
+                            
+                                <h2>Completed Cases</h2>
+                                <div id="completed-cases-container" class="cases-container"></div>
+                            </div>
+                                
+                                <button type="button" onclick="evaluateRiskAssessment()">Evaluate Risk Assessment</button>
+                            </form>
+                        </div>
+
+                        <script>
+                        function fetchWithTimeout(resource, options = {}, timeout = 5000) {
+    const controller = new AbortController();
+    const { signal } = controller;
+    const fetchPromise = fetch(resource, { ...options, signal });
+
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    return fetchPromise.finally(() => clearTimeout(timeoutId));
+}
+
+async function fetchAndDisplayAllCases() {
+    const aadharNumber = document.getElementById('aadhar_number').value;
+
+    if (!aadharNumber || aadharNumber.length !== 12) {
+        alert('Please enter a valid 12-digit Aadhar number.');
+        return;
+    }
+
+    try {
+        // Fetch all cases with timeout
+        const response = await fetchWithTimeout(`http://127.0.0.1:8000/all-cases/${aadharNumber}`, {}, 10000);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch cases: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Update the UI
+        displayCases(data);
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            alert('Request timed out. Please try again.');
+        } else {
+            console.error('Error fetching all cases:', error);
+            alert('Failed to fetch cases. Please try again.');
+        }
+    }
+}
+
+
+function displayCases(data) {
+    const ongoingContainer = document.getElementById('ongoing-cases-container');
+    const completedContainer = document.getElementById('completed-cases-container');
+
+    // Clear previous data
+    ongoingContainer.innerHTML = '';
+    completedContainer.innerHTML = '';
+
+    // Display ongoing cases
+    if (data.ongoing_cases.length > 0) {
+        data.ongoing_cases.forEach((caseItem) => {
+            const caseElement = document.createElement('div');
+            caseElement.className = 'case-item';
+            caseElement.innerHTML = `
+                <h3>Case Number: ${caseItem.case_number || 'N/A'}</h3>
+                <p>Charges: ${caseItem.charges || 'N/A'}</p>
+                <p>Bail Status: ${caseItem.bail_status || 'N/A'}</p>
+                <p>Case Status: ${caseItem.case_status || 'N/A'}</p>
+                <p>Court Hearing Date: ${caseItem.court_hearing_date || 'N/A'}</p>
+                <hr>
+            `;
+            ongoingContainer.appendChild(caseElement);
+        });
+    } else {
+        ongoingContainer.innerHTML = '<p>No ongoing cases found.</p>';
+    }
+
+    // Display completed cases
+    if (data.completed_cases.length > 0) {
+        data.completed_cases.forEach((caseItem) => {
+            const caseElement = document.createElement('div');
+            caseElement.className = 'case-item';
+            caseElement.innerHTML = `
+                <h3>Case Number: ${caseItem.case_number || 'N/A'}</h3>
+                <p>Charges: ${caseItem.charges || 'N/A'}</p>
+                <p>Bail Status: ${caseItem.bail_status || 'N/A'}</p>
+                <p>Case Status: ${caseItem.case_status || 'N/A'}</p>
+                <p>Judgement: ${caseItem.judgement || 'N/A'}</p>
+                <hr>
+            `;
+            completedContainer.appendChild(caseElement);
+        });
+    } else {
+        completedContainer.innerHTML = '<p>No completed cases found.</p>';
+    }
+}
+
+
+                            // Function to evaluate risk assessment and display ongoing and completed cases
+    async function evaluateRiskAssessment() {
+    const aadharNumber = document.getElementById('aadhar_number').value;
+
+    if (!aadharNumber || aadharNumber.length !== 12) {
+        alert('Please enter a valid 12-digit Aadhar number.');
+        return;
+    }
+
+    try {
+        // Fetch ongoing case count
+        const ongoingResponse = await fetch(`http://127.0.0.1:8000/ongoing-cases/${aadharNumber}`);
+        if (!ongoingResponse.ok) {
+            throw new Error(`Failed to fetch ongoing cases: ${ongoingResponse.status}`);
+        }
+        const ongoingData = await ongoingResponse.json();
+        const ongoingCount = ongoingData.count || 0;
+
+        // Fetch completed case count
+        const completedResponse = await fetch(`http://127.0.0.1:8000/completed-cases/${aadharNumber}`);
+        if (!completedResponse.ok) {
+            throw new Error(`Failed to fetch completed cases: ${completedResponse.status}`);
+        }
+        const completedData = await completedResponse.json();
+        const completedCount = completedData.count || 0;
+
+        // Use these values in the risk assessment
+        const income = parseInt(document.getElementById('income').value);
+        const socialTies = document.getElementById('social_ties').value;
+        const politicalInfluence = parseInt(document.getElementById('political_influence').value);
+        const businessInfluence = parseInt(document.getElementById('business_influence').value);
+        const policeOpinion = document.getElementById('police_opinion').value;
+        const strengthOfEvidence = parseInt(document.getElementById('strength_evidence').value);
+        const neighborhoodOpinion = parseInt(document.getElementById('neighbourhood_opinion').value);
+
+        // Normalize the values
+        const normalizedIncome = normalizeIncome(income);
+        const normalizedSocialTies = normalizeSocialTies(socialTies);
+        const normalizedOngoingCases = normalizeOngoingCases(ongoingCount);
+        const normalizedCompletedCases = normalizeCompletedCases(completedCount);
+        const normalizedPoliticalInfluence = politicalInfluence;
+        const normalizedBusinessInfluence = businessInfluence;
+        const normalizedPoliceOpinion = normalizePoliceOpinion(policeOpinion);
+        const normalizedStrengthOfEvidence = normalizeStrengthOfEvidence(strengthOfEvidence);
+        const normalizedNeighborhoodOpinion = normalizeNeighborhoodOpinion(neighborhoodOpinion);
+
+        // Weights for each factor
+        const weights = {
+            income: -0.1,
+            socialTies: -0.2,
+            ongoingCases: 0.5,
+            completedCases: -0.1,
+            politicalInfluence: 0.3,
+            businessInfluence: 0.3,
+            policeOpinion: 0.2,
+            strengthOfEvidence: -0.1,
+            neighborhoodOpinion: 0.15,
+        };
+
+        // Calculate Risk Score
+        const riskScore = (weights.income * normalizedIncome) +
+                          (weights.socialTies * normalizedSocialTies) +
+                          (weights.ongoingCases * normalizedOngoingCases) +
+                          (weights.completedCases * normalizedCompletedCases) +
+                          (weights.politicalInfluence * normalizedPoliticalInfluence) +
+                          (weights.businessInfluence * normalizedBusinessInfluence) +
+                          (weights.policeOpinion * normalizedPoliceOpinion) +
+                          (weights.strengthOfEvidence * normalizedStrengthOfEvidence) +
+                          (weights.neighborhoodOpinion * normalizedNeighborhoodOpinion);
+
+        // Ensure the risk score is between 0 and 100
+        const finalRiskScore = Math.min(100, Math.max(0, riskScore));
+
+        // Display the result
+        alert(`Risk Assessment Score: ${finalRiskScore.toFixed(2)}%`);
+    } catch (error) {
+        console.error('Error evaluating risk assessment:', error);
+        alert('Failed to evaluate risk assessment. Please try again.');
+    }
+    }
+function normalizeIncome(income) {
+    const maxIncome = 1000000; // Adjust based on expected income scale
+    return Math.min(100, (income / maxIncome) * 100);
+}
+
+function normalizeSocialTies(socialTies) {
+    const socialTiesMap = {
+        very_low: 0,
+        low: 25,
+        medium: 50,
+        high: 75,
+        very_high: 100,
+    };
+    return socialTiesMap[socialTies] || 50; // Default to medium if undefined
+}
+
+function normalizeOngoingCases(ongoingCases) {
+    const maxCases = 100; // Adjust based on expected max cases
+    return Math.min(100, (ongoingCases / maxCases) * 100);
+}
+
+function normalizeCompletedCases(completedCases) {
+    const maxCases = 100; // Adjust based on expected max cases
+    return Math.min(100, (completedCases / maxCases) * 100);
+}
+
+function normalizePoliceOpinion(policeOpinion) {
+    const policeOpinionMap = {
+        excellent: 0,
+        good: 25,
+        average: 50,
+        poor: 75,
+        very_poor: 100,
+    };
+    return policeOpinionMap[policeOpinion] || 50; // Default to average if undefined
+}
+
+function normalizeStrengthOfEvidence(strengthOfEvidence) {
+    return 100 - (strengthOfEvidence * 10); // Inverse because strong evidence reduces risk
+}
+
+function normalizeNeighborhoodOpinion(neighborhoodOpinion) {
+    return 100 - (neighborhoodOpinion * 10); // Inverse because bad opinion increases risk
+}
+
+function updatePoliticalInfluence(value) {
+    document.getElementById('political_influence_value').textContent = `${value}%`;
+}
+
+function updateBusinessInfluence(value) {
+    document.getElementById('business_influence_value').textContent = `${value}%`;
+}
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Bail Reckoner</title>
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- FontAwesome for icons -->
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1>Login</h1>
+            <p>Please select your role to login</p>
+            <div class="dropdown">
+                <select id="user-type" onchange="showLoginForm()">
+                    <option value="" disabled selected>Select User Type</option>
+                    <option value="legalAid-login">Legal Aid Provider</option>
+                    <option value="judicial-login">Judicial Authority</option>
+                    <option value="prisoner-login">Prisoner</option>
+                    <option value="admin-login">Admin</option>
+                </select>
+            </div>
+            
+            <!-- Legal Aid Provider Login Form -->
+            <div id="legalAid-login" class="login-form">
+                <h2>Legal Aid Provider Login</h2>
+                <form class="login-form-data" data-role="legal_aid">
+                    <label for="legalAid-email">Email</label>
+                    <div class="input-container">
+                        <input type="email" id="legalAid-email" name="email" placeholder="Enter your email" required>
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <label for="legalAid-password">Password</label>
+                    <div class="input-container">
+                        <input type="password" id="legalAid-password" name="password" placeholder="Enter your password" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('legalAid-password')"></i>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+            
+            <!-- Judicial Authority Login Form -->
+            <div id="judicial-login" class="login-form">
+                <h2>Judicial Authority Login</h2>
+                <form class="login-form-data" data-role="judicial_authority">
+                    <label for="judicial-email">Email</label>
+                    <div class="input-container">
+                        <input type="email" id="judicial-email" name="email" placeholder="Enter your email" required>
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <label for="judicial-password">Password</label>
+                    <div class="input-container">
+                        <input type="password" id="judicial-password" name="password" placeholder="Enter your password" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('judicial-password')"></i>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+            
+            <!-- Prisoner Login Form -->
+            <div id="prisoner-login" class="login-form">
+                <h2>Prisoner Login</h2>
+                <form class="login-form-data" data-role="prisoner">
+                    <label for="prisoner-email">Email</label>
+                    <div class="input-container">
+                        <input type="email" id="prisoner-email" name="email" placeholder="Enter your email" required>
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <label for="prisoner-password">Password</label>
+                    <div class="input-container">
+                        <input type="password" id="prisoner-password" name="password" placeholder="Enter your password" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('prisoner-password')"></i>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+
+            <!-- Admin Login Form -->
+            <div id="admin-login" class="login-form">
+                <h2>Admin Login</h2>
+                <form class="login-form-data" data-role="admin">
+                    <label for="admin-email">Email</label>
+                    <div class="input-container">
+                        <input type="email" id="admin-email" name="email" placeholder="Enter admin email" required>
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <label for="admin-password">Password</label>
+                    <div class="input-container">
+                        <input type="password" id="admin-password" name="password" placeholder="Enter admin password" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('admin-password')"></i>
+                        
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+
+            <p>Don't have an account? <a href="register.html" class="guest-link" >Register here</a></p>
+            
+            <p><a href="guest.html" class="guest-link">Continue as Guest</a></p>
+
+            <button onclick="window.location.href='index.html'" class="home-button">Go to Home</button>
+        </div>
+    </div>
+
+    <script>
+        // Temporary admin credentials dictionary
+        const admins = {
+            "admin1@bailreckoner.com": "admin1",
+            "admin2@bailreckoner.com": "admin2",
+            "admin3@bailreckoner.com": "admin3",
+            "admin4@bailreckoner.com": "admin4",
+            "admin5@bailreckoner.com": "admin5"
+        };
+
+        function showLoginForm() {
+            const forms = document.querySelectorAll('.login-form');
+            forms.forEach(form => form.style.display = 'none');
+            const selectedValue = document.getElementById('user-type').value;
+            if (selectedValue) {
+                document.getElementById(selectedValue).style.display = 'block';
+            }
+        }
+    
+        function togglePasswordVisibility(inputId) {
+            const passwordField = document.getElementById(inputId);
+            const toggleIcon = passwordField.nextElementSibling;
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+    
+        // Handle Login Submission
+        document.querySelectorAll('.login-form-data').forEach(form => {
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+    
+                const formData = new FormData(event.target);
+                const email = formData.get('email');
+                const password = formData.get('password');
+                const role = event.target.dataset.role;
+
+                if (role === "admin") {
+                    if (admins[email] && admins[email] === password) {
+                        alert("Admin login successful");
+                        window.location.href = 'admin.html';
+                    } else {
+                        alert("Invalid admin credentials");
+                    }
+                } else {
+                    // Handle other role logins (e.g., legal aid, prisoner)
+                    try {
+                        const response = await fetch('http://127.0.0.1:8000/login', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ email, password, role }),
+                        });
+    
+                        const result = await response.json();
+                        if (response.ok) {
+                            localStorage.setItem('userName', result.name || 'Unknown User');
+                            localStorage.setItem('userRole', role);
+                            window.location.href = 'home.html';
+                        } else {
+                            alert(result.detail || 'Login failed. Please check your credentials.');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Login failed. Please try again later.');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

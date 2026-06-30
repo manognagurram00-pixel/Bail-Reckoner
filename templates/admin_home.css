@@ -1,0 +1,177 @@
+/* General body and layout styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('images/admin_home.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    animation: fadeIn 1s ease-in; /* Fade-in effect for the entire page */
+}
+
+/* Navigation Bar Styles */
+.header {
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%; /* Ensures it spans the entire viewport width */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    animation: slideDown 0.8s ease-out; /* Slide-down animation for the navbar */
+}
+
+.header .logo a {
+    text-decoration: none;
+    font-size: 1.5rem;
+    color: white;
+    font-weight: bold;
+}
+
+.navigation {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.navigation a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 1rem;
+    white-space: nowrap; /* Prevent links from wrapping */
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.navigation a:hover {
+    text-decoration: underline;
+    color: #4CAF50; /* Highlight color on hover */
+}
+
+/* Main Content Styles */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    padding-top: 80px; /* Adjust to account for fixed header */
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: white;
+    animation: slideInTop 1s ease-out; /* Slide-in animation from the top */
+}
+
+.official-text {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    max-width: 600px;
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+    padding: 15px 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 1.5s ease-in; /* Fade-in effect for the text */
+}
+
+/* Footer Styles */
+.footer {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    animation: fadeIn 1s ease-in; /* Fade-in effect for the footer */
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInTop {
+    from {
+        transform: translateY(-50%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header .logo a {
+        font-size: 1.2rem;
+    }
+
+    .navigation a {
+        font-size: 0.9rem;
+        margin: 0 10px;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .official-text {
+        font-size: 1rem;
+        padding: 10px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .header .navigation {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .official-text {
+        font-size: 0.9rem;
+    }
+}

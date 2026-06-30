@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Bail Reckoner</title>
+    <link rel="stylesheet" href="register.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1>Register</h1>
+            <p>Please select your role to register</p>
+            <div class="dropdown">
+                <select id="user-type" onchange="showRegisterForm()">
+                    <option value="" disabled selected>Select User Type</option>
+                    <option value="legalAid-register">Legal Aid Provider</option>
+                    <option value="judicial-register">Judicial Authority</option>
+                    <option value="prisoner-register">Under Trial Prisoner</option>
+                </select>
+            </div>
+
+<!-- Legal Aid Provider Register Form -->
+<div id="legalAid-register" class="register-form">
+    <h2>Legal Aid Provider Registration</h2>
+    <form class="register-form-data">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="legalAid-name">Full Name</label>
+                <div class="input-container">
+                    <input type="text" id="legalAid-name" name="name" placeholder="Enter full name" required>
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="legalAid-dob">Date of Birth</label>
+                <div class="input-container">
+                    <input type="date" id="legalAid-dob" name="dob" required>
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="legalAid-aadhar">Aadhar Number</label>
+                <div class="input-container">
+                    <input type="text" id="legalAid-aadhar" name="aadhar_number" placeholder="Enter Aadhar number" required>
+                    <i class="fas fa-id-card"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="legalAid-designation">Designation</label>
+                <div class="input-container">
+                    <input type="text" id="legalAid-designation" name="designation" placeholder="Enter designation" required>
+                    <i class="fas fa-briefcase"></i>
+                </div>
+            </div>
+        </div>
+
+        <label for="legalAid-address">Address</label>
+        <div class="input-container">
+            <input type="text" id="legalAid-address" name="address" placeholder="Enter address" required>
+            <i class="fas fa-map-marker-alt"></i>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="legalAid-contact">Contact Number</label>
+                <div class="input-container">
+                    <input type="text" id="legalAid-contact" name="contact" placeholder="Enter contact number" required>
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="legalAid-email">Email</label>
+                <div class="input-container">
+                    <input type="email" id="legalAid-email" name="email" placeholder="Enter email" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="legalAid-password">Password</label>
+                <div class="input-container">
+                    <input type="password" id="legalAid-password" name="password" placeholder="Enter password" required>
+                    <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('legalAid-password')"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="legalAid-gender">Gender</label>
+                <div class="input-container">
+                    <select id="legalAid-gender" name="gender" required>
+                        <option value="" disabled selected>Select gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <i class="fas fa-venus-mars"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="legalAid-license">License Number</label>
+                <div class="input-container">
+                    <input type="text" id="legalAid-license" name="license" placeholder="Enter license number" required>
+                    <i class="fas fa-certificate"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="legalAid-experience">Experience (in years)</label>
+                <div class="input-container">
+                    <input type="number" id="legalAid-experience" name="experience" placeholder="Enter years of experience" required>
+                    <i class="fas fa-clock"></i>
+                </div>
+            </div>
+        </div>
+
+<!-- Working Location -->
+            <div class="form-group">
+                <label for="legalAid-working-location">Working Location</label>
+                <div class="input-container">
+                    <select id="legalAid-working-location" name="working_location" onchange="showLocationField()" required>
+                    <option value="" disabled selected>Select working location</option>
+                    <option value="Live_Location">Live Location</option> <!-- Corrected value -->
+                    <option value="Manual_Location">Manual Location</option> <!-- Corrected value -->
+                    <option value="Predefined_Cities">Predefined Cities</option> <!-- Corrected value -->
+                    </select>
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                </div>
+
+<!-- Live Location Field -->
+            <div id="live-working-location" class="working-location-field" style="display: none;">
+                <button type="button" onclick="getLiveLocation()">Get Live Location</button>
+                <div id="liveWorkingLocationDisplay" class="working-location-display">
+                    <p>No working location selected yet.</p>
+                </div>
+            </div>
+
+<!-- Predefined Cities Field -->
+            <div id="predefined-working-location" class="working-location-field" style="display: none;">
+                <p>Select a city:</p>
+                <select id="predefinedWorkingCities" onchange="updateLocation('predefined')">
+                    <option value="" disabled selected>Select City</option>
+                    <option value="12.9716,77.5946">Bangalore</option>
+                    <option value="28.7041,77.1025">Delhi</option>
+                    <option value="19.0760,72.8777">Mumbai</option>
+                    <option value="13.0827,80.2707">Chennai</option>
+                    <option value="22.5726,88.3639">Kolkata</option>
+                </select>
+                    <div id="predefinedWorkingLocationDisplay" class="working-location-display">
+                    <p>No working location selected yet.</p>
+                </div>
+            </div>
+
+<!-- Manual Location Field -->
+            <div id="manual-working-location" class="working-location-field" style="display: none;">
+                <p>Enter Latitude and Longitude:</p>
+                <input type="text" id="manualWorkingLocation" placeholder="Enter Latitude,Longitude" onblur="updateLocation('manual')">
+                <div id="manualWorkingLocationDisplay" class="working-location-display">
+                    <p>No working location entered yet.</p>
+                </div>
+            </div>
+
+            <input type="hidden" id="workingLocationData" name="working_location"> <!-- Hidden input for form submission -->
+
+
+        <!-- Legal Fee -->
+            <div class="form-group">
+                <label for="legalAid-legal-fee">Legal Fee (in INR)(if Private Adovate)</label>
+                <div class="input-container">
+                    <input type="number" id="legalAid-legal-fee" name="legal_fee" placeholder="Enter legal fee" required>
+                    <i class="fas fa-money-bill-alt"></i>
+                </div>
+            </div>
+
+            <!-- Languages Known Field -->
+            <div class="form-group">
+                <label for="languages-known">Languages Known</label>
+                <select id="languages-known" name="languages_known" multiple>
+                    <option value="English">English</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="Kannada">Kannada</option>
+                    <option value="Telugu">Telugu</option>
+                    <option value="Malayalam">Malayalam</option>
+                    <option value="Marathi">Marathi</option>
+                    <option value="Tamil">Tamil</option>
+                    <option value="Gujarati">Gujarati</option>
+                    <option value="Urdu">Urdu</option>
+                    <option value="Odia">Odia</option>
+                    <option value="Punjabi">Punjabi</option>
+                    <option value="Bengali">Bengali</option>
+                    <option value="Assamese">Assamese</option>
+                    <option value="Maithili">Maithili</option>
+                    <option value="Santali">Santali</option>
+                    <option value="Kashmiri">Kashmiri</option>
+                    <option value="Nepali">Nepali</option>
+                    <option value="Sindhi">Sindhi</option>
+                    <option value="Konkani">Konkani</option>
+                    <option value="Dogri">Dogri</option>
+                    <option value="Manipuri">Manipuri</option>
+                    <option value="Bodo">Bodo</option>
+                    <option value="Santhali">Santhali</option>
+                    <option value="Khasi">Khasi</option>
+                    <option value="Mizo">Mizo</option>
+                    <option value="Tulu">Tulu</option>
+                    <option value="Bhili">Bhili</option>
+                    <option value="Garo">Garo</option>
+                    <option value="Ladakhi">Ladakhi</option>
+                    <option value="Sanskrit">Sanskrit</option>
+                </select>
+            </div>
+
+        <button type="submit" data-role="legalAid">Register</button>
+    </form>
+</div>
+
+
+
+<!-- Judicial Authority Register Form -->
+<div id="judicial-register" class="register-form">
+    <h2>Judicial Authority Registration</h2>
+    <form class="register-form-data">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="judicial-name">Full Name</label>
+                <div class="input-container">
+                    <input type="text" id="judicial-name" name="name" placeholder="Enter full name" required>
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="judicial-dob">Date of Birth</label>
+                <div class="input-container">
+                    <input type="date" id="judicial-dob" name="dob" required>
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="judicial-aadhar">Aadhar Number</label>
+                <div class="input-container">
+                    <input type="text" id="judicial-aadhar" name="aadhar_number" placeholder="Enter Aadhar number" required>
+                    <i class="fas fa-id-card"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="judicial-gender">Gender</label>
+                <div class="input-container">
+                    <select id="judicial-gender" name="gender" required>
+                        <option value="" disabled selected>Select gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <i class="fas fa-venus-mars"></i>
+                </div>
+            </div>
+        </div>
+        <label for="judicial-address">Address</label>
+        <div class="input-container">
+            <input type="text" id="judicial-address" name="address" placeholder="Enter address" required>
+            <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="judicial-contact">Contact Number</label>
+                <div class="input-container">
+                    <input type="text" id="judicial-contact" name="contact" placeholder="Enter contact number" required>
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="judicial-email">Email</label>
+                <div class="input-container">
+                    <input type="email" id="judicial-email" name="email" placeholder="Enter email" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="judicial-password">Password</label>
+                <div class="input-container">
+                    <input type="password" id="judicial-password" name="password" placeholder="Enter password" required>
+                    <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('judicial-password')"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="judicial-designation">Designation</label>
+                <div class="input-container">
+                    <input type="text" id="judicial-designation" name="designation" placeholder="Enter designation" required>
+                    <i class="fas fa-briefcase"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="judicial-license">License Number</label>
+                <div class="input-container">
+                    <input type="text" id="judicial-license" name="license" placeholder="Enter license number" required>
+                    <i class="fas fa-certificate"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="judicial-experience">Experience (in years)</label>
+                <div class="input-container">
+                    <input type="number" id="judicial-experience" name="experience" placeholder="Enter years of experience" required>
+                    <i class="fas fa-clock"></i>
+                </div>
+            </div>
+        </div>
+        <button type="submit" data-role="judicial">Register</button>
+    </form>
+</div>
+<!-- Under Trial Prisoner Register Form -->
+<div id="prisoner-register" class="register-form">
+    <h2>Under Trial Prisoner Registration</h2>
+    <form class="register-form-data">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="prisoner-name">Full Name</label>
+                <div class="input-container">
+                    <input type="text" id="prisoner-name" name="name" placeholder="Enter full name" required>
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="prisoner-dob">Date of Birth</label>
+                <div class="input-container">
+                    <input type="date" id="prisoner-dob" name="dob" required>
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="prisoner-aadhar">Aadhar Number</label>
+                <div class="input-container">
+                    <input type="text" id="prisoner-aadhar" name="aadhar_number" placeholder="Enter Aadhar number" required>
+                    <i class="fas fa-id-card"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="prisoner-gender">Gender</label>
+                <div class="input-container">
+                    <select id="prisoner-gender" name="gender" required>
+                        <option value="" disabled selected>Select gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <i class="fas fa-venus-mars"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="prisoner-phone-number">Phone Number</label>
+                <div class="input-container">
+                    <input type="text" id="prisoner-phone-number" name="phone_number" placeholder="Enter phone number" required>
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="prisoner-email">Email</label>
+                <div class="input-container">
+                    <input type="email" id="prisoner-email" name="email" placeholder="Enter email" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="prisoner-occupation">Occupation</label>
+                <div class="input-container">
+                    <input type="text" id="prisoner-occupation" name="occupation" placeholder="Enter occupation" required>
+                    <i class="fas fa-briefcase"></i>
+                </div>
+            </div>
+        </div>
+        <label for="prisoner-address">Address</label>
+        <div class="input-container">
+            <input type="text" id="prisoner-address" name="address" placeholder="Enter address" required>
+            <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="prisoner-father-name">Father's Name</label>
+                <div class="input-container">
+                    <input type="text" id="prisoner-father-name" name="father_name" placeholder="Enter father's name" required>
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="prisoner-father-aadhar">Father's Aadhar Number</label>
+                <div class="input-container">
+                    <input type="text" id="prisoner-father-aadhar" name="father_aadhar" placeholder="Enter father's Aadhar number" required>
+                    <i class="fas fa-id-card"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="prisoner-mother-name">Mother's Name</label>
+                <div class="input-container">
+                    <input type="text" id="prisoner-mother-name" name="mother_name" placeholder="Enter mother's name" required>
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="prisoner-mother-aadhar">Mother's Aadhar Number</label>
+                <div class="input-container">
+                    <input type="text" id="prisoner-mother-aadhar" name="mother_aadhar" placeholder="Enter mother's Aadhar number" required>
+                    <i class="fas fa-id-card"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="prisoner-siblings-name">Siblings' Names</label>
+                <div class="input-container">
+                    <input type="text" id="prisoner-siblings-name" name="siblings_name" placeholder="Enter siblings' names (if any)">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="prisoner-siblings-aadhar">Siblings' Aadhar Numbers</label>
+                <div class="input-container">
+                    <input type="text" id="prisoner-siblings-aadhar" name="siblings_aadhar" placeholder="Enter siblings' Aadhar numbers (if any)">
+                    <i class="fas fa-id-card"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="prisoner-family-designation">Family Member Designation</label>
+                <div class="input-container">
+                    <input type="text" id="prisoner-family-designation" name="family_member_designation" placeholder="Enter family member designation (if any)">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+            </div>
+        </div>
+        <label for="prisoner-case-history">Previous Case History</label>
+        <div class="input-container">
+            <textarea id="prisoner-case-history" name="case_history" placeholder="Enter previous case history (if any)" required></textarea>
+            <i class="fas fa-history"></i>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="prisoner-password">Password</label>
+                <div class="input-container">
+                    <input type="password" id="prisoner-password" name="password" placeholder="Enter password" required>
+                    <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('prisoner-password')"></i>
+                </div>
+            </div>
+        </div>
+        <button type="submit" data-role="prisoner">Register</button>
+    </form>
+</div>
+
+<p>Already have an account? <a href="login.html">Login here</a></p>
+<button onclick="window.location.href='index.html'">Go to Home</button>
+</div>
+</div>
+
+<script>
+// Show the appropriate registration form based on user selection
+function showRegisterForm() {
+const forms = document.querySelectorAll('.register-form');
+forms.forEach(form => form.style.display = 'none');
+const selectedValue = document.getElementById('user-type').value;
+if (selectedValue) {
+    document.getElementById(selectedValue).style.display = 'block';
+}
+}
+
+// Toggle password visibility
+function togglePasswordVisibility(inputId) {
+const passwordField = document.getElementById(inputId);
+const toggleIcon = passwordField.nextElementSibling;
+if (passwordField.type === 'password') {
+    passwordField.type = 'text';
+    toggleIcon.classList.remove('fa-eye');
+    toggleIcon.classList.add('fa-eye-slash');
+} else {
+    passwordField.type = 'password';
+    toggleIcon.classList.remove('fa-eye-slash');
+    toggleIcon.classList.add('fa-eye');
+}
+}
+
+// Show the corresponding location input field based on the selected option
+function showLocationField() {
+    const selectedOption = document.getElementById("legalAid-working-location").value;
+    const fields = document.querySelectorAll(".working-location-field");
+
+    // Hide all location fields
+    fields.forEach(field => (field.style.display = "none"));
+
+    // Show the selected field
+    if (selectedOption === "Live_Location") { // Updated to match backend value
+        document.getElementById("live-working-location").style.display = "block";
+    } else if (selectedOption === "Predefined_Cities") { // Updated to match backend value
+        document.getElementById("predefined-working-location").style.display = "block";
+    } else if (selectedOption === "Manual_Location") { // Updated to match backend value
+        document.getElementById("manual-working-location").style.display = "block";
+    }
+}
+
+// Get live location using Geolocation API
+function getLiveLocation() {
+    const liveLocationDisplay = document.getElementById("liveWorkingLocationDisplay");
+    const workingLocationData = document.getElementById("workingLocationData");
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                const locationData = `${latitude},${longitude}`;
+
+                // Set the hidden input field with latitude and longitude
+                workingLocationData.value = locationData;
+                liveLocationDisplay.innerHTML = `<p>Live Location: Latitude ${latitude}, Longitude ${longitude}</p>`;
+            },
+            (error) => {
+                liveLocationDisplay.innerHTML = `<p>Error: ${error.message}</p>`;
+                workingLocationData.value = ""; // Clear the value if Geolocation fails
+            }
+        );
+    } else {
+        liveLocationDisplay.innerHTML = "<p>Geolocation is not supported by this browser.</p>";
+        workingLocationData.value = ""; // Clear the value if Geolocation is unavailable
+    }
+}
+
+// Update location data from predefined cities or manual input
+function updateLocation(type) {
+    const locationDisplay =
+        type === "predefined"
+            ? document.getElementById("predefinedWorkingLocationDisplay")
+            : document.getElementById("manualWorkingLocationDisplay");
+
+    const workingLocationData = document.getElementById("workingLocationData");
+    let locationData = "";
+
+    if (type === "predefined") {
+        const predefinedCities = document.getElementById("predefinedWorkingCities").value;
+        if (predefinedCities) {
+            const [latitude, longitude] = predefinedCities.split(",");
+            if (!isNaN(latitude) && !isNaN(longitude)) {
+                locationData = predefinedCities;
+                locationDisplay.innerHTML = `<p>Selected City: Latitude ${latitude}, Longitude ${longitude}</p>`;
+            } else {
+                locationDisplay.innerHTML = "<p>Invalid predefined city coordinates.</p>";
+            }
+        } else {
+            locationDisplay.innerHTML = "<p>No city selected yet.</p>";
+        }
+    } else if (type === "manual") {
+        const manualLocation = document.getElementById("manualWorkingLocation").value.trim();
+        if (manualLocation) {
+            const [latitude, longitude] = manualLocation.split(",");
+            if (!isNaN(latitude) && !isNaN(longitude) &&
+                latitude >= -90 && latitude <= 90 &&
+                longitude >= -180 && longitude <= 180) {
+                locationData = manualLocation;
+                locationDisplay.innerHTML = `<p>Manual Location: Latitude ${latitude}, Longitude ${longitude}</p>`;
+            } else {
+                locationDisplay.innerHTML = "<p>Invalid manual location format. Use Latitude,Longitude.</p>";
+            }
+        } else {
+            locationDisplay.innerHTML = "<p>No manual location entered yet.</p>";
+        }
+    }
+
+    // Update the hidden input value
+    if (locationData) {
+        workingLocationData.value = locationData;
+    } else {
+        workingLocationData.value = ""; // Clear the value if the input is invalid
+    }
+}
+
+
+function isValidLatLon(location) {
+    if (!location || typeof location !== "string") return false;
+    const [latitude, longitude] = location.split(",").map(coord => parseFloat(coord));
+    return (
+        !isNaN(latitude) &&
+        !isNaN(longitude) &&
+        latitude >= -90 &&
+        latitude <= 90 &&
+        longitude >= -180 &&
+        longitude <= 180
+    );
+}
+
+// Submit the registration form and send data to the backend
+document.querySelectorAll('.register-form-data').forEach(form => {
+    form.addEventListener('submit', async event => {
+        event.preventDefault(); // Prevent default form submission
+        console.log("Working Location Data being sent:", document.getElementById("workingLocationData").value);
+        const formData = new FormData(event.target);
+        const role = event.target.querySelector("button[type='submit']").dataset.role;
+        // Function to get selected languages
+        const getLanguagesKnown = () => {
+            const languagesDropdown = document.getElementById("languages-known");
+            const selectedLanguages = Array.from(languagesDropdown.selectedOptions).map(option => option.value);
+            return selectedLanguages.join(','); // Return a comma-separated string
+        };
+        // Collect common fields
+        const data = {
+            role,
+            full_name: formData.get("name"),
+            dob: formData.get("dob"),
+            aadhar_number: formData.get("aadhar_number"),
+            gender: formData.get("gender"),
+            address: formData.get("address"),
+            email: formData.get("email"),
+            password: formData.get("password"),
+
+        };
+
+        // Collect role-specific fields
+        if (role === 'legalAid') {
+            data.designation = formData.get("designation");
+            data.license_number = formData.get("license");
+            data.experience = parseInt(formData.get("experience")) || 0;
+            data.contact_number = formData.get("contact");
+            data.working_location = formData.get("working_location"); // New field
+            data.legal_fee = parseFloat(formData.get("legal_fee")) || 0; // New field
+            data.latitude_longitude = document.getElementById("workingLocationData").value; // Ensure correct key
+            data.working_location = document.getElementById("workingLocationData").value;
+            console.log("Working Location Data being sent:", data.working_location); // Debugging
+            data.languages_known = getLanguagesKnown(); // Include Languages Known
+            if (!isValidLatLon(data.working_location)) {
+                alert("Invalid working location. Must be valid 'latitude,longitude' coordinates.");
+                return;
+            }
+        } else if (role === 'judicial') {
+            data.designation = formData.get("designation");
+            data.license_number = formData.get("license");
+            data.experience = parseInt(formData.get("experience")) || 0;
+            data.contact_number = formData.get("contact");
+        } else if (role === 'prisoner') {
+            data.phone_number = formData.get("phone_number");
+            data.occupation = formData.get("occupation");
+            data.father_name = formData.get("father_name");
+            data.father_aadhar = formData.get("father_aadhar");
+            data.mother_name = formData.get("mother_name");
+            data.mother_aadhar = formData.get("mother_aadhar");
+            data.siblings_name = formData.get("siblings_name");
+            data.siblings_aadhar = formData.get("siblings_aadhar");
+            data.family_member_designation = formData.get("family_member_designation");
+            data.case_history = formData.get("case_history");
+        }
+
+        // Validate required fields
+        if (!data.aadhar_number) {
+            alert("Aadhar number is required.");
+            return;
+        }
+        if (role === 'legalAid' && !data.designation) {
+            alert("Designation is required for Legal Aid Provider.");
+            return;
+        }
+        if (role === 'prisoner' && !data.phone_number) {
+            alert("Phone number is required for prisoners.");
+            return;
+        }
+
+        // Debugging: Log the payload
+        console.log("Payload data:", data);
+
+        // Send data to the backend
+        try {
+            const response = await fetch('http://127.0.0.1:5000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert(result.message);
+                window.location.href = 'login.html';
+            } else {
+                alert(result.message || "Registration failed.");
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Registration failed. Please try again later.');
+        }
+    });
+});
+
+</script>
+</body>
+</html>
+

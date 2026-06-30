@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Opinions</title>
+    <link rel="stylesheet" href="case_judge.css">
+</head>
+<body>
+    <div class="top-text">Pending Opinions</div>
+    <main>
+        <div id="cases-container">
+            <!-- Cases will be dynamically loaded here -->
+        </div>
+        <a href="home.html" class="back-button">Back</a>
+    </main>
+    <div class="bottom-text">&copy; 2024 Bail Reckoner. All rights reserved.</div>
+    <script>
+        // Fetch cases with null opinions
+        async function fetchPendingOpinions() {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/pending-opinions');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch cases. Please try again later.');
+                }
+                const cases = await response.json();
+                displayCases(cases);
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        function displayCases(cases) {
+            const container = document.getElementById('cases-container');
+            container.innerHTML = '';
+            if (cases.length === 0) {
+                container.innerHTML = '<p>No cases requiring opinion at the moment.</p>';
+                return;
+            }
+            cases.forEach(caseItem => {
+                const caseDiv = document.createElement('div');
+                caseDiv.classList.add('case-card');
+                caseDiv.innerHTML = `
+                    <h2>Case Number: ${caseItem.case_number}</h2>
+                    <p><strong>Prisoner ID:</strong> ${caseItem.prisoner_id}</p>
+                    <p><strong>Charges:</strong> ${caseItem.charges}</p>
+                    <p><strong>Arrest Conditions:</strong> ${caseItem.arrest_conditions || 'Not provided'}</p>
+                    <p><strong>Offense Date:</strong> ${caseItem.offense_date || 'Not provided'}</p>
+                    <p><strong>Arrest Date:</strong> ${caseItem.arrest_date || 'Not provided'}</p>
+                    <p><strong>Bail Status:</strong> ${caseItem.bail_status || 'Not provided'}</p>
+                    <p><strong>Case Status:</strong> ${caseItem.case_status || 'Not provided'}</p>
+                    <p><strong>Court Hearing Date:</strong> ${caseItem.court_hearing_date || 'Not scheduled'}</p>
+                    <p><strong>Legal Aid Provider ID:</strong> ${caseItem.legal_aid_provider_id || 'Not assigned'}</p>
+                    <p><strong>Case Summary:</strong> ${caseItem.case_summary || 'No summary available'}</p>
+                    <p><strong>Evidence Details:</strong> ${caseItem.evidence_details || 'No evidence details available'}</p>                   
+                    <p><strong>Suggestions:</strong> ${caseItem.suggestions || 'No suggestions available'}</p>
+                    <textarea id="opinion-${caseItem.id}" placeholder="Write your opinion here..."></textarea>
+                    <button onclick="submitOpinion(${caseItem.id})">Submit Opinion</button>
+                `;
+                container.appendChild(caseDiv);
+            });
+        }
+
+        async function submitOpinion(caseId) {
+            const opinion = document.getElementById(`opinion-${caseId}`).value.trim();
+            if (!opinion) {
+                alert('Please enter an opinion before submitting.');
+                return;
+            }
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/submit-opinion/${caseId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ opinion }),
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to submit opinion. Please try again.');
+                }
+                alert('Opinion submitted successfully!');
+                fetchPendingOpinions(); // Refresh the list
+            } catch (error) {
+                console.error('Error:', error.message);
+                alert('An error occurred while submitting your opinion. Please try again later.');
+            }
+        }
+
+        // Fetch cases on page load
+        fetchPendingOpinions();
+    </script>
+</body>
+</html>

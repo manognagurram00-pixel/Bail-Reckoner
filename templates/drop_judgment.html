@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Details and Judgement Form</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="judicial_authority.css">
+</head>
+<body>
+    <header>
+        <h1>Case Details and Judgement Form</h1>
+        <p>Enter case details and provide judgement for completed cases.</p>
+    </header>
+    <main>
+        <form id="case-details-form">
+            <section>
+                <h2>Basic Case Information</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prisoner-id">Prisoner ID</label>
+                        <div class="input-container">
+                            <input type="text" id="prisoner-id" name="prisoner_id" placeholder="Enter prisoner ID" required>
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="aadhar-number">Aadhar Number</label>
+                        <div class="input-container">
+                            <input type="text" id="aadhar-number" name="aadhar_number" placeholder="Enter Aadhar Number (12 digits)" required>
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="case-number">Case Number</label>
+                        <div class="input-container">
+                            <input type="text" id="case-number" name="case_number" placeholder="Enter case number (e.g., C12345/2024)" required>
+                            <i class="fas fa-folder"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="arrest-conditions">Arrest Conditions</label>
+                        <div class="input-container">
+                            <textarea id="arrest-conditions" name="arrest_conditions" rows="3" placeholder="Describe arrest conditions" required></textarea>
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Offense and Legal Details</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="charges">Charges</label>
+                        <div class="input-container">
+                            <textarea id="charges" name="charges" rows="3" placeholder="Enter charges (e.g., IPC_302, IPC_307)" required></textarea>
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="offense-date">Offense Date</label>
+                        <div class="input-container">
+                            <input type="date" id="offense-date" name="offense_date" required>
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="arrest-date">Arrest Date</label>
+                        <div class="input-container">
+                            <input type="date" id="arrest-date" name="arrest_date" required>
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="bail-status">Bail Status</label>
+                        <div class="input-container">
+                            <select id="bail-status" name="bail_status" required>
+                                <option value="">Select bail status</option>
+                                <option value="bailable">Bailable</option>
+                                <option value="non-bailable">Non-Bailable</option>
+                                <option value="bail-granted">Bail Granted</option>
+                                <option value="bail-rejected">Bail Rejected</option>
+                            </select>
+                            <i class="fas fa-stamp"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Case Status and Judgement</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="case-status">Case Status</label>
+                        <div class="input-container">
+                            <select id="case-status" name="case_status" required>
+                                <option value="">Select case status</option>
+                                <option value="ongoing">Ongoing</option>
+                                <option value="resolved">Resolved</option>
+                                <option value="appeal">Appeal</option>
+                            </select>
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="court-hearing-date">Court Hearing Date</label>
+                        <div class="input-container">
+                            <input type="date" id="court-hearing-date" name="court_hearing_date" required>
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="judgement">Judgement</label>
+                        <div class="input-container">
+                            <textarea id="judgement" name="judgement" rows="4" placeholder="Enter judgement details" required></textarea>
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="submit-section">
+                <button type="button" id="add-completed-case-button">Add to Completed Cases</button>
+                <button type="reset">Reset Form</button>
+                <!-- Add this button where you want the back button to appear -->
+                <button onclick="window.location.href='home.html';" class="back-button">Back to Home</button>
+
+            </section>
+        </form>
+    </main>
+    <script>
+        document.getElementById("add-completed-case-button").addEventListener("click", async () => {
+            const completedCaseDetails = {
+                prisoner_id: document.getElementById("prisoner-id").value,
+                aadhar_number: document.getElementById("aadhar-number").value,
+                case_number: document.getElementById("case-number").value,
+                arrest_conditions: document.getElementById("arrest-conditions").value,
+                charges: document.getElementById("charges").value,
+                offense_date: document.getElementById("offense-date").value,
+                arrest_date: document.getElementById("arrest-date").value,
+                bail_status: document.getElementById("bail-status").value,
+                case_status: document.getElementById("case-status").value,
+                court_hearing_date: document.getElementById("court-hearing-date").value,
+                judgement: document.getElementById("judgement").value,
+            };
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/add-completed-case", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(completedCaseDetails),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    alert(`Error: ${errorText || "Unknown error occurred"}`);
+                    return;
+                }
+
+                const result = await response.json();
+                alert(result.message);
+                window.location.href = 'home.html';
+            } catch (error) {
+                alert("An unexpected error occurred: " + error.message);
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>

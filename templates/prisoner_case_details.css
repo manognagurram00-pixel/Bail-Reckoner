@@ -1,0 +1,62 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('images/case_details.jpg') no-repeat center center fixed; /* Background image retained */
+    background-size: cover;
+    color: #fff; /* White text */
+}
+
+.top-text, .bottom-text {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff; /* White text */
+}
+
+main {
+    padding: 30px;
+    background-color: rgba(0, 0, 0, 0.8); /* Black container with transparency */
+    margin: 20px auto;
+    border-radius: 10px;
+    max-width: 800px;
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+}
+
+button, .back-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #fff; /* White buttons */
+    color: #000; /* Black text for contrast */
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+button:hover, .back-button:hover {
+    background-color: #ddd; /* Light grey on hover */
+}
+
+#case-details {
+    margin-top: 20px;
+    padding: 20px;
+    background: #1e1e1e; /* Dark grey for contrast */
+    border: 1px solid #444; /* Slight border for structure */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+    color: #fff; /* White text */
+}
+
+#case-details p {
+    margin: 5px 0;
+    font-size: 16px;
+    line-height: 1.6;
+}

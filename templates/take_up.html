@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Cases</title>
+    <link rel="stylesheet" href="take_up.css">
+</head>
+<body>
+    <div class="top-text">
+        <h1>Pending Cases</h1>
+        <p>View cases and take up a case.</p>
+    </div>
+
+    <main>
+        <div id="cases-container">
+            <!-- Cases will be dynamically loaded here -->
+        </div>
+    </main>
+
+    <div class="bottom-text">&copy; 2024 Bail Reckoner. All rights reserved.</div>
+
+    <script>
+        let legalAidProviderName;
+
+        function checkLegalAidProviderName() {
+            legalAidProviderName = localStorage.getItem('userName');
+            if (!legalAidProviderName) {
+                legalAidProviderName = prompt("Please enter your name:");
+                if (legalAidProviderName) {
+                    localStorage.setItem('userName', legalAidProviderName);
+                } else {
+                    alert("You need to provide your name to take up a case.");
+                    return;
+                }
+            }
+        }
+
+        checkLegalAidProviderName();
+
+        async function fetchPendingCases() {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/pending-cases');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch cases');
+                }
+                const cases = await response.json();
+                displayCases(cases);
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+
+        function displayCases(cases) {
+            const container = document.getElementById('cases-container');
+            container.innerHTML = '';
+            if (cases.length === 0) {
+                container.innerHTML = '<p>No pending cases at the moment.</p>';
+                return;
+            }
+            cases.forEach(caseItem => {
+                const caseDiv = document.createElement('div');
+                caseDiv.classList.add('case-item');
+                caseDiv.innerHTML = `
+                    <<h2>Case Number: ${caseItem.case_number}</h2>
+                    <p><strong>Prisoner ID:</strong> ${caseItem.prisoner_id}</p>
+                    <p><strong>Aadhar Number:</strong> ${caseItem.aadhar_number || 'Not provided'}</p>
+                    <p><strong>Arrest Conditions:</strong> ${caseItem.arrest_conditions || 'Not provided'}</p>
+                    <p><strong>Charges:</strong> ${caseItem.charges}</p>
+                    <p><strong>Offense Date:</strong> ${caseItem.offense_date || 'Not provided'}</p>
+                    <p><strong>Arrest Date:</strong> ${caseItem.arrest_date || 'Not provided'}</p>
+                    <p><strong>Bail Status:</strong> ${caseItem.bail_status || 'Not provided'}</p>
+                    <p><strong>Case Status:</strong> ${caseItem.case_status || 'Not provided'}</p>
+                    <p><strong>Court Hearing Date:</strong> ${caseItem.court_hearing_date || 'Not scheduled'}</p>
+                    <p><strong>Case Summary:</strong> ${caseItem.case_summary || 'No summary available'}</p>
+                    <p><strong>Evidence Details:</strong> ${caseItem.evidence_details || 'No evidence details available'}</p>
+                    <button onclick="takeUpCase(${caseItem.id})">Take up the case</button>
+                `;
+                container.appendChild(caseDiv);
+            });
+        }
+
+        async function takeUpCase(caseId) {
+            if (!legalAidProviderName) {
+                alert('You need to be logged in as a Legal Aid Provider to take up the case.');
+                return;
+            }
+
+            const licenseNumber = prompt("Please enter your license number:");
+            if (!licenseNumber) {
+                alert("License number is required to take up the case.");
+                return;
+            }
+
+            const payload = {
+                prisoner_lawyer: legalAidProviderName,
+                license_number: licenseNumber
+            };
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/take-up-case/${caseId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to take up the case');
+                }
+
+                alert('Case taken up successfully!');
+                fetchPendingCases();
+            } catch (error) {
+                console.error(error.message);
+                alert('An error occurred while taking up the case.');
+            }
+        }
+
+        fetchPendingCases();
+    </script>
+</body>
+</html>

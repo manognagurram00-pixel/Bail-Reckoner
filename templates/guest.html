@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Details Form</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"> <!-- FontAwesome -->
+    <link rel="stylesheet" href="guest.css">
+</head>
+<body>
+    <header>
+        <h1>Case Details Form</h1>
+        <p>Enter all case details below to manage prisoner information effectively.</p>
+    </header>
+    <main>
+        <form id="case-details-form">
+            <section>
+                <h2>Basic Case Information</h2>
+
+                <div class="form-row">
+                    
+                    <div class="form-group">
+                        <label for="prisoner-id">Prisoner ID</label>
+                        <div class="input-container">
+                            <input type="text" id="prisoner-id" name="prisonerId" placeholder="Enter prisoner ID" required>
+                            <i class="fas fa-user"></i>
+                        </diprov>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="case-number">Case Number</label>
+                        <div class="input-container">
+                            <input type="text" id="case-number" name="caseNumber" placeholder="Enter case number (e.g., C12345/2024)" required>
+                            <i class="fas fa-folder"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="arrest-conditions">Arrest Conditions</label>
+                        <div class="input-container">
+                            <textarea id="arrest-conditions" name="arrestConditions" rows="3" placeholder="Describe arrest conditions" required></textarea>
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Offense and Legal Details</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="charges">Charges</label>
+                        <div class="input-container">
+                            <textarea id="charges" name="charges" rows="3" placeholder="Enter charges (e.g., IPC_302, IPC_307)" required></textarea>
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="offense-date">Offense Date</label>
+                        <div class="input-container">
+                            <input type="date" id="offense-date" name="offenseDate" required>
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="arrest-date">Arrest Date</label>
+                        <div class="input-container">
+                            <input type="date" id="arrest-date" name="arrestDate" required>
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="bail-status">Bail Status</label>
+                        <div class="input-container">
+                            <select id="bail-status" name="bailStatus" required>
+                                <option value="">Select bail status</option>
+                                <option value="bailable">Bailable</option>
+                                <option value="non-bailable">Non-Bailable</option>
+                                <option value="bail-granted">Bail Granted</option>
+                                <option value="bail-rejected">Bail Rejected</option>
+                            </select>
+                            <i class="fas fa-stamp"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Case Status and Additional Information</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="case-status">Case Status</label>
+                        <div class="input-container">
+                            <select id="case-status" name="caseStatus" required>
+                                <option value="">Select case status</option>
+                                <option value="ongoing">Ongoing</option>
+                                <option value="resolved">Resolved</option>
+                                <option value="appeal">Appeal</option>
+                            </select>
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="court-hearing-date">Court Hearing Date</label>
+                        <div class="input-container">
+                            <input type="date" id="court-hearing-date" name="courtHearingDate" required>
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="legal-aid-provider-id">Legal Aid Provider ID (Optional)</label>
+                        <div class="input-container">
+                            <input type="text" id="legal-aid-provider-id" name="legalAidProviderId" placeholder="Enter legal aid provider ID (if any)">
+                            <i class="fas fa-id-card-alt"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="case-summary">Case Summary</label>
+                        <div class="input-container">
+                            <textarea id="case-summary" name="caseSummary" rows="5" placeholder="Provide a brief case summary"></textarea>
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="evidence-details">Evidence Details</label>
+                        <div class="input-container">
+                            <textarea id="evidence-details" name="evidenceDetails" rows="3" placeholder="Describe evidence (e.g., CCTV footage, fingerprints)"></textarea>
+                            <i class="fas fa-evidence"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="submit-section">
+                <button type="submit" id="submit-button">Submit Case Details</button>
+                <button class="reset" type="reset">Reset Form</button>
+            </section>
+            <button type="button" id="back-button" onclick="location.href='login.html';">Login</button>
+            <section id="response-section" class="response">
+                <h2>Bail Status Response</h2>
+                <pre id="response-output">Awaiting response...</pre>
+            </section>
+        </form>
+    </main>
+</body>
+</html>
